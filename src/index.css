@@ -1,13 +1,221 @@
+/* src/index.css - Matrix Theme */
+
 body {
+  background-color: #000000; /* Fondo negro */
+  color: #00FF00; /* Texto verde Matrix */
+  font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada */
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* --- Tipografía --- */
+h1, h2, h3, h4, h5, h6 {
+  color: #39FF14; /* Verde ligeramente diferente para destacar */
+  text-shadow: 0 0 3px #00FF00; /* Ligero brillo */
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+}
+
+p {
+  line-height: 1.6;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  background-color: #111;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid #003300;
+}
+
+/* --- Enlaces y Botones --- */
+a {
+  color: #00FF00;
+  text-decoration: none; /* Sin subrayado por defecto */
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+a:hover {
+  color: #FFFFFF; /* Blanco al pasar el ratón */
+  text-shadow: 0 0 5px #FFFFFF;
+}
+
+/* Estilo base para botones y enlaces que deben parecer botones */
+button,
+.btn, /* Clases comunes para botones (ej. Bootstrap) */
+a.btn {
+  background-color: #000000;
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  padding: 10px 18px;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  font-family: inherit; /* Hereda la fuente monoespaciada */
+  font-size: 1em;
+  margin: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+button:hover,
+.btn:hover,
+a.btn:hover {
+  background-color: #00FF00;
+  color: #000000;
+  box-shadow: 0 0 10px #00FF00;
+}
+
+button:disabled,
+.btn:disabled,
+a.btn:disabled {
+  border-color: #005500; /* Verde oscuro */
+  color: #005500;
+  background-color: #000000;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Estilos específicos si usas clases como btn-primary, btn-danger, etc. */
+.btn-primary {
+  /* Puedes diferenciarlo si quieres, o dejar el estilo base */
+}
+
+.btn-danger {
+  border-color: #FF0000; /* Rojo */
+  color: #FF0000;
+}
+
+.btn-danger:hover {
+  background-color: #FF0000;
+  color: #000000;
+  box-shadow: 0 0 10px #FF0000;
+}
+
+.btn-secondary {
+  border-color: #555555; /* Gris oscuro */
+  color: #aaaaaa;
+}
+
+.btn-secondary:hover {
+  background-color: #555555;
+  color: #000000;
+  border-color: #aaaaaa;
+  box-shadow: 0 0 8px #aaaaaa;
+}
+
+/* --- Formularios --- */
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #39FF14;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  background-color: #111111; /* Fondo oscuro para campos */
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box; /* Para que el padding no aumente el ancho total */
+  margin-bottom: 15px;
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #008000; /* Verde oscuro para placeholder */
+  opacity: 0.7;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #FFFFFF;
+  box-shadow: 0 0 8px #00FF00;
+}
+
+/* --- Componentes Comunes (Ejemplos) --- */
+
+/* Navbar (Puede necesitar !important si hay inline styles) */
+nav {
+  background-color: #001a00 !important; /* Verde muy oscuro */
+  padding: 10px 20px !important;
+  border-bottom: 1px solid #00FF00 !important;
+  margin-bottom: 30px !important;
+}
+
+nav a,
+nav button {
+  color: #00FF00 !important;
+  margin: 0 15px !important;
+  background: none !important; /* Asegura que los botones se vean como texto */
+  border: none !important;
+  padding: 0 !important;
+  font-size: 1em !important;
+}
+
+nav a:hover,
+nav button:hover {
+  color: #FFFFFF !important;
+  text-shadow: 0 0 5px #FFFFFF !important;
+}
+
+/* Cards (Asumiendo clase .card) */
+.card {
+  background-color: #050505; /* Gris muy oscuro, casi negro */
+  border: 1px solid #005500; /* Borde verde oscuro */
+  margin-bottom: 25px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+}
+
+.card-title {
+  color: #39FF14;
+  border-bottom: 1px dashed #00FF00;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+/* Alerts (Asumiendo clases .alert) */
+.alert {
+  border: 1px solid;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 2px currentColor;
+}
+
+.alert-info {
+  background-color: rgba(0, 30, 60, 0.5); /* Azul oscuro translúcido */
+  border-color: #7FDBFF; /* Aqua */
+  color: #7FDBFF;
+}
+
+.alert-warning {
+  background-color: rgba(61, 153, 112, 0.5); /* Oliva translúcido */
+  border-color: #FFDC00; /* Amarillo */
+  color: #FFDC00;
+}
+
+.alert-danger {
+  background-color: rgba(68, 0, 0, 0.5); /* Rojo oscuro translúcido */
+  border-color: #FF4136; /* Rojo */
+  color: #FF4136;
+}
+
+.alert-success {
+  background-color: rgba(0, 51, 0, 0.5); /* Verde oscuro translúcido */
+  border-color: #2ECC40; /* Lima */
+  color: #2ECC40;
+}
+
+/* Contenedor principal si es necesario */
+.container {
+  max-width: 960px; /* O el ancho que prefieras */
+  margin: 0 auto;
+  padding: 0 15px;
 }
