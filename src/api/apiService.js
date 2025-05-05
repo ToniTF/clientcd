@@ -1,7 +1,17 @@
 import axios from 'axios';
 
-// Lee la URL base de la API desde las variables de entorno de React
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Determinamos la URL base de la API basada en el hostname actual
+const getApiBaseUrl = () => {
+    const hostname = window.location.hostname;
+    // Si el hostname es una IP o un dominio específico, ajustamos la URL de la API
+    if (hostname === '192.168.56.1') {
+        return 'http://192.168.56.1:5000/api';
+    }
+    // En cualquier otro caso, usamos la variable de entorno o el valor por defecto
+    return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+};
+
+const API_URL = getApiBaseUrl();
 console.log('API_URL utilizada por apiService:', API_URL);
 
 // Crea una instancia de Axios con la URL base
@@ -98,15 +108,19 @@ export const loginUser = async (credentials) => {
         // ...guarda el token en el almacenamiento local del navegador.
         localStorage.setItem('token', response.data.token);
     }
-    return response; // Devuelve la respuesta completa (incluyendo el token si existe)
+    // Devuelve la respuesta completa. El componente que llama (LoginPage)
+    // debe extraer response.data.user y pasarlo a AuthContext.login()
+    return response;
 };
 
 /**
  * Cierra la sesión del usuario (lado del cliente).
  */
 export const logoutUser = () => {
-    // Simplemente elimina el token guardado.
+    // Elimina el token guardado.
     localStorage.removeItem('token');
+    // También elimina el usuario guardado, aunque AuthContext.logout también lo hace.
+    localStorage.removeItem('currentUser');
     // Nota: Si tuvieras una ruta /api/auth/logout en el backend para invalidar
     // el token del lado del servidor, la llamarías aquí también.
 };

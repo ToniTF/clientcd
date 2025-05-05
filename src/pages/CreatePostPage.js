@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // Importa useNavigate para redirigir
 import { useNavigate } from 'react-router-dom';
 // Importa la función para crear posts desde nuestro servicio de API
 import { createPost } from '../api/apiService';
+// Importa el contexto de autenticación para obtener la información del usuario actual
+import { AuthContext } from '../context/AuthContext';
 
 function CreatePostPage() {
     // Estados para el título, contenido, errores, éxito y carga
@@ -13,6 +15,9 @@ function CreatePostPage() {
     const [loading, setLoading] = useState(false); // Estado de carga para el envío
     // Hook para navegación
     const navigate = useNavigate();
+    
+    // Obtener información del usuario actual desde el contexto
+    const { currentUser } = useContext(AuthContext);
 
     // --- Protección básica de ruta (lado del cliente) ---
     useEffect(() => {
@@ -41,10 +46,22 @@ function CreatePostPage() {
         setLoading(true); // Inicia estado de carga
 
         try {
-            console.log('Intentando crear post con:', { title, content });
+            // Crear el objeto de datos del post incluyendo la información del autor
+            const postData = {
+                title,
+                content,
+                // Incluimos la información del autor para que el backend la asocie al post
+                author: {
+                    id: currentUser?.id,
+                    email: currentUser?.email,
+                    username: currentUser?.username || currentUser?.email
+                }
+            };
+
+            console.log('Intentando crear post con:', postData);
             // Llama a la función createPost de apiService
             // El token JWT se añade automáticamente por el interceptor de Axios
-            const response = await createPost({ title, content });
+            const response = await createPost(postData);
             console.log('Post creado exitosamente:', response.data);
 
             // Muestra mensaje de éxito

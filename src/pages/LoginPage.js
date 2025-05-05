@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 // Importa useNavigate para poder redirigir al usuario después del login
 import { useNavigate, Link } from 'react-router-dom';
 // Importa la función para hacer login desde nuestro servicio de API
 import { loginUser } from '../api/apiService';
-
-// (Opcional) Si usas Context API para el estado de autenticación, lo importarías aquí
-// import { useAuth } from '../context/AuthContext';
+// Importa el contexto de autenticación
+import { AuthContext } from '../context/AuthContext';
 
 function LoginPage() {
     // Estados para guardar el email y la contraseña introducidos por el usuario
@@ -16,8 +15,8 @@ function LoginPage() {
     // Hook para la navegación programática
     const navigate = useNavigate();
 
-    // (Opcional) Obtén la función de login del contexto si lo usas
-    // const { login } = useAuth();
+    // Obtiene la función de login del contexto
+    const { login } = useContext(AuthContext);
 
     // Función que se ejecuta cuando se envía el formulario
     const handleSubmit = async (e) => {
@@ -28,16 +27,22 @@ function LoginPage() {
             console.log('Intentando iniciar sesión con:', { email, password });
             // Llama a la función loginUser de apiService con las credenciales
             const response = await loginUser({ email, password });
-            console.log('Login exitoso:', response.data);
+            console.log('Respuesta del login:', response.data);
 
-            // Si el login fue exitoso (implícito si no lanzó error y tenemos token)
-            // El token ya se guardó en localStorage dentro de loginUser en apiService.js
-
-            // (Opcional) Si usas Context, actualiza el estado global de autenticación
-            // login(response.data.token); // Pasa el token al contexto
-
-            // Redirige al usuario a la página principal
-            navigate('/');
+            // Verifica que la respuesta contenga el token Y el objeto user con su ID
+            if (response.data && response.data.token && response.data.user && response.data.user.id) {
+                // Llama a la función login del AuthContext con el objeto user recibido
+                // AuthContext se encargará de guardar este objeto en localStorage
+                login(response.data.user);
+                console.log('Usuario guardado en el contexto:', response.data.user);
+                
+                // Redirige al usuario a la página principal
+                navigate('/');
+            } else {
+                // Si falta el token o el objeto user (o su id), es un error inesperado
+                console.error('Respuesta de login incompleta o inválida:', response.data);
+                setError('Error inesperado al iniciar sesión. Respuesta incompleta del servidor.');
+            }
 
         } catch (err) {
             // Si la llamada a loginUser falla (ej. credenciales incorrectas, error de servidor)
