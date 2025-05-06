@@ -19,7 +19,7 @@ import { AuthProvider } from './context/AuthContext';
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router basename="/clientcd">
                 <Navbar />
 
                 <div className="container" style={{ padding: '0 20px', marginTop: '20px' }}>

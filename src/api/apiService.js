@@ -20,7 +20,7 @@ const getApiBaseUrl = () => {
     
     // 3. Para cualquier otro caso (ej. aplicación desplegada), usar la URL de Render
     // Esta será la URL por defecto cuando la aplicación no esté en localhost y REACT_APP_API_URL no esté seteada.
-    const renderApiUrl = 'https://api-clientcd.onrender.com';
+    const renderApiUrl = 'https://api-clientcd.onrender.com'; // Eliminado /api del final
     console.log(`Usando API URL de Render por defecto: ${renderApiUrl}`);
     return renderApiUrl;
 };
