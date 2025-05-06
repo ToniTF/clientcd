@@ -4,7 +4,6 @@ body {
   background-color: #000000; /* Fondo negro */
   color: #00FF00; /* Texto verde Matrix */
   font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada */
-  margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

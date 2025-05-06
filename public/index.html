@@ -10,34 +10,117 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>React App</title>
+    <style>
+      /* Estilos iniciales para evitar FOUC y preparar la animación */
+      body {
+        margin: 0;
+        background-color: #000;
+        overflow: hidden; /* Evita scrollbars durante la intro */
+      }
+      #matrix-rain-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 99999;
+      }
+      #matrix-rain-canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      #root {
+        display: none; /* React app oculta inicialmente */
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+    <div id="matrix-rain-container">
+      <canvas id="matrix-rain-canvas"></canvas>
+    </div>
+
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <script>
+      // Script de la animación Matrix (inline para ejecución inmediata)
+      (function() {
+        const matrixContainer = document.getElementById('matrix-rain-container');
+        const canvas = document.getElementById('matrix-rain-canvas');
+        const rootElement = document.getElementById('root');
+        const bodyElement = document.body;
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+        if (!canvas || !matrixContainer || !rootElement || !bodyElement) {
+          console.error('Elementos esenciales para la intro no encontrados.');
+          if (rootElement) rootElement.style.display = 'block'; // Fallback
+          if (bodyElement) bodyElement.style.overflow = 'auto';
+          return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+          rainDrops[x] = 1;
+        }
+
+        let animationFrameId;
+        function drawMatrix() {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#00FF00';
+          ctx.font = fontSize + 'px monospace';
+
+          for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              rainDrops[i] = 0;
+            }
+            rainDrops[i]++;
+          }
+          animationFrameId = requestAnimationFrame(drawMatrix);
+        }
+
+        drawMatrix();
+
+        const animationDuration = 4000; // Duración en ms
+        setTimeout(() => {
+          if (animationFrameId) cancelAnimationFrame(animationFrameId);
+          
+          matrixContainer.style.transition = 'opacity 1s ease-out';
+          matrixContainer.style.opacity = '0';
+          
+          setTimeout(() => {
+            matrixContainer.style.display = 'none';
+            rootElement.style.display = 'block';
+            bodyElement.style.overflow = 'auto'; // Restaura scrollbars para la app
+            // Aquí es donde React normalmente tomaría el control.
+            // El script de React en index.js se ejecutará después de esto.
+          }, 1000); // Coincide con la duración de la transición de opacidad
+        }, animationDuration);
+
+        window.addEventListener('resize', () => {
+          if (matrixContainer.style.display !== 'none') {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Idealmente, recalcular columnas y reiniciar rainDrops aquí
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
