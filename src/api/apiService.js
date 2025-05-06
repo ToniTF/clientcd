@@ -3,12 +3,26 @@ import axios from 'axios';
 // Determinamos la URL base de la API basada en el hostname actual
 const getApiBaseUrl = () => {
     const hostname = window.location.hostname;
-    // Si el hostname es una IP o un dominio específico, ajustamos la URL de la API
-    if (hostname === '192.168.56.1') {
-        return 'http://192.168.56.1:5000/api';
+
+    // 1. Usar la variable de entorno REACT_APP_API_URL si está definida
+    // Esto permite la máxima flexibilidad para configurar la URL de la API.
+    if (process.env.REACT_APP_API_URL) {
+        console.log(`Usando API URL desde REACT_APP_API_URL: ${process.env.REACT_APP_API_URL}`);
+        return process.env.REACT_APP_API_URL;
     }
-    // En cualquier otro caso, usamos la variable de entorno o el valor por defecto
-    return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+    // 2. Para desarrollo local estándar (cuando el frontend corre en localhost)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        const localApiUrl = 'http://localhost:5000/api'; // URL de tu backend local
+        console.log(`Desarrollo local detectado. Usando API URL local: ${localApiUrl}`);
+        return localApiUrl;
+    }
+    
+    // 3. Para cualquier otro caso (ej. aplicación desplegada), usar la URL de Render
+    // Esta será la URL por defecto cuando la aplicación no esté en localhost y REACT_APP_API_URL no esté seteada.
+    const renderApiUrl = 'https://api-clientcd.onrender.com';
+    console.log(`Usando API URL de Render por defecto: ${renderApiUrl}`);
+    return renderApiUrl;
 };
 
 const API_URL = getApiBaseUrl();
